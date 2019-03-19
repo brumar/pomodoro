@@ -7,6 +7,7 @@ from constants import *
 from util import timedelta_str, Stage, PomodoroState
 
 MAX_LINE_LEN = 50
+ONE_TIME_ONLY = True
 _kill = False
 
 pomo_state = None
@@ -37,6 +38,8 @@ def run_stage(stage, progress_callback=None):
 
 parser = argparse.ArgumentParser(description='A Pomodoro CLI.')
 parser.add_argument('--interactive', dest='interactive', action='store_true')
+parser.add_argument('--cycle', dest='cycle', action='store_false')
+parser.add_argument('--minutes', dest='minutes', type=int, default=ACTIVE_STAGE_MINUTES)
 args = parser.parse_args()
 
 if args.interactive:
@@ -62,11 +65,13 @@ if args.interactive:
 else:
     # Non-interactive, should be able to just run in the background.
     print("Running in non-interactive mode")
-    pomo_state = PomodoroState(ACTIVE_STAGE_MINUTES, REST_STAGE_MINUTES, STATE_FILE)
+    pomo_state = PomodoroState(args.minutes, REST_STAGE_MINUTES, STATE_FILE)
     while True:
         run_stage(Stage.ACTIVE)
-        pomo_state.prep_for_rest()
         notify_user("Pomodoro completed", "Time for the rest stage")
+        if not cycle:
+            break
+        pomo_state.prep_for_rest()
         run_stage(Stage.REST)
         pomo_state.prep_for_active()
         notify_user("Rest stage completed", "Time to get back to work")

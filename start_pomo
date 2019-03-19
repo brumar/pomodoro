@@ -1,5 +1,11 @@
 # repo path
 dir="`dirname \"$(readlink -f \"$0\")\"`"
 
+positional_arg=""
+if [ $# -eq 1 ]
+  then
+  	positional_arg="--minutes $1"
+fi
+
 # run
-python3 "$dir/pomo_runner.py"
+python3 "$dir/pomo_runner.py" $positional_arg

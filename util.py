@@ -6,11 +6,22 @@ from time import sleep, time
 from constants import STATE_FRESHESS_CUTOFF_SECS
 
 
+def urgency_level(minutes):
+    if minutes > 13:
+        return "<span color='green'></span>"
+    if minutes > 5:
+        return "<span color='orange'></span>"
+    return "<span color='red'></span>"
+
 def timedelta_str(td):
     hours, remainder = divmod(td.total_seconds(), 3600)
     minutes, seconds = divmod(remainder, 60)
+    urgency_label = urgency_level(minutes)
     # assert hours == 0
-    return "%02d:%02d remaining" % (minutes, seconds)
+    if minutes !=0:
+        return " %s  %02d min" % (urgency_label, minutes)
+    else:
+        return " %s  %02d s" % (urgency_label, seconds)
 
 
 def read_stage_and_time(fname):
