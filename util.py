@@ -25,7 +25,10 @@ def timedelta_str(td):
 
 
 def read_stage_and_time(fname):
-    data = json.load(open(fname))
+    try:
+        data = json.load(open(fname))
+    except:
+        return None, None
     last_mod_time = path.getmtime(fname)
     secs_elapsed = time() - last_mod_time
     if secs_elapsed < STATE_FRESHESS_CUTOFF_SECS:
