@@ -6,6 +6,10 @@ if [ $# -eq 1 ]
   then
   	positional_arg="--minutes $1"
 fi
+if [ $# -eq 2 ]
+  then
+  	positional_arg="--minutes $1 --goal $2"
+fi
 
 # run
-python3 "$dir/pomo_runner.py" $positional_arg
+python3.7 "$dir/pomo_runner.py" $positional_arg

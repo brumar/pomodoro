@@ -40,7 +40,12 @@ parser = argparse.ArgumentParser(description='A Pomodoro CLI.')
 parser.add_argument('--interactive', dest='interactive', action='store_true')
 parser.add_argument('--cycle', dest='cycle', action='store_false')
 parser.add_argument('--minutes', dest='minutes', type=int, default=ACTIVE_STAGE_MINUTES)
+parser.add_argument('--goal', dest='goal', type=str, default="")
 args = parser.parse_args()
+
+if args.goal:
+    with open("/home/bruno/pomodoro/history.txt", "w") as hist_file:
+        hist_file.write(f"{args.minutes} : {args.goal}")
 
 if args.interactive:
     print("Running in interactive mode")
@@ -69,7 +74,8 @@ else:
     while True:
         run_stage(Stage.ACTIVE)
         notify_user("Pomodoro completed", "Time for the rest stage")
-        if not cycle:
+        break
+        if not args.cycle:
             break
         pomo_state.prep_for_rest()
         run_stage(Stage.REST)
